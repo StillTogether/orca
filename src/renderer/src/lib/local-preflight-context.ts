@@ -54,6 +54,9 @@ export function getLocalProjectExecutionRuntimeContext(
   }
 
   const worktree = getLocalWorktree(state, worktreeId)
+  if (worktreeId && !worktree) {
+    return undefined
+  }
   const repo = getLocalRuntimeRepoForWorktree(state, worktree)
   if (!isLocalRuntimeRepo(repo) || !isLocalRuntimeWorktree(worktree)) {
     return undefined

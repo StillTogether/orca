@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { FLOATING_TERMINAL_WORKTREE_ID } from '../../../shared/constants'
 import type { Repo, Worktree } from '../../../shared/types'
 import type { AppState } from '@/store/types'
 import {
@@ -472,6 +473,17 @@ describe('local preflight context', () => {
         cacheKey: 'repo-1:windows-host'
       }
     })
+  })
+
+  it('does not assign the active project runtime to the floating workspace', () => {
+    const state = {
+      ...makeState({ repoPath: 'C:\\Users\\alice\\repo', worktreePath: 'C:\\Users\\alice\\repo' }),
+      projects: [{ id: 'repo-1', localWindowsRuntimePreference: { kind: 'wsl', distro: 'Ubuntu' } }]
+    } as unknown as AppState
+
+    expect(
+      getLocalProjectExecutionRuntimeContext(state, FLOATING_TERMINAL_WORKTREE_ID, 'win32')
+    ).toBeUndefined()
   })
 
   it('resolves WSL UNC worktrees to their owning distro when the project inherits host default', () => {
